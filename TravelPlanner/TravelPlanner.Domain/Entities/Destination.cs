@@ -6,6 +6,6 @@
         public required string City { get; set; }
         public required string Country { get; set; }
         public int TripId { get; set; }
-        public required Trip Trip { get; set; }
+        public Trip? Trip { get; set; }
     }
 }

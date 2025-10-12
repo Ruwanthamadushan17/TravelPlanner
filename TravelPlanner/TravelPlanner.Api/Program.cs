@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using TravelPlanner.Infrastructure;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -6,6 +9,11 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddDbContext<TravelPlannerDb>(opt =>
+    opt.UseSqlServer(
+        builder.Configuration.GetConnectionString("Sql"),
+        sql => sql.EnableRetryOnFailure()));
 
 var app = builder.Build();
 
