@@ -6,7 +6,8 @@ using TravelPlanner.Application.Validation;
 namespace TravelPlanner.Api.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/v1/[controller]")]
+[Produces("application/json")]
 public class TripsController : ControllerBase
 {
     private readonly ITripRepository _trips;
@@ -19,6 +20,8 @@ public class TripsController : ControllerBase
     }
 
     [HttpGet("{id:int}")]
+    [ProducesResponseType(typeof(TripDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<ActionResult<TripDto>> GetById(int id, CancellationToken ct)
     {
         var trip = await _trips.GetByIdAsync(id, ct);
@@ -27,6 +30,7 @@ public class TripsController : ControllerBase
     }
 
     [HttpGet]
+    [ProducesResponseType(typeof(IEnumerable<TripDto>), StatusCodes.Status200OK)]
     public async Task<ActionResult<IEnumerable<TripDto>>> List([FromQuery] string? ownerEmail, CancellationToken ct)
     {
         var items = await _trips.ListAsync(ownerEmail, ct);
@@ -34,6 +38,8 @@ public class TripsController : ControllerBase
     }
 
     [HttpPost]
+    [ProducesResponseType(typeof(TripDto), StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<TripDto>> Create([FromBody] CreateTripRequest request, CancellationToken ct)
     {
         CreateTripRequestValidator.ValidateAndThrow(request);
@@ -45,4 +51,3 @@ public class TripsController : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id = entity.Id }, entity.ToDto());
     }
 }
-
