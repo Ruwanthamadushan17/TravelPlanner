@@ -416,3 +416,6 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+# --- Dev secrets (any project) ---
+**/secrets.development.json

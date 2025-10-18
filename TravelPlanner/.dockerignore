@@ -1,0 +1,22 @@
+# --- Dev secrets (any project) ---
+**/secrets.development.json
+
+# --- Build outputs ---
+**/bin/
+**/obj/
+**/out/
+TestResults/
+
+# --- IDE / user-specific ---
+.vs/
+.vscode/
+*.user
+*.csproj.user
+*.suo
+
+
+artifacts/
+.git
+.gitignore
+Dockerfile
+docker-compose*.yml
