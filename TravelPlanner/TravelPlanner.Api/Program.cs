@@ -1,7 +1,27 @@
-using Microsoft.EntityFrameworkCore;
+using Azure.Identity;
+using TravelPlanner.Api.Middleware;
 using TravelPlanner.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Additional configuration sources
+if (builder.Environment.IsDevelopment())
+{
+    var secretsFile = builder.Configuration["Secrets:FilePath"]
+        ?? Path.Combine(builder.Environment.ContentRootPath, "secrets.development.json");
+    if (File.Exists(secretsFile))
+    {
+        builder.Configuration.AddJsonFile(secretsFile, optional: false, reloadOnChange: true);
+    }
+}
+else if (builder.Environment.IsProduction())
+{
+    var vaultUri = builder.Configuration["KeyVault:VaultUri"];
+    if (!string.IsNullOrWhiteSpace(vaultUri))
+    {
+        builder.Configuration.AddAzureKeyVault(new Uri(vaultUri), new DefaultAzureCredential());
+    }
+}
 
 // Add services to the container.
 
@@ -10,10 +30,8 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddDbContext<TravelPlannerDb>(opt =>
-    opt.UseSqlServer(
-        builder.Configuration.GetConnectionString("Sql"),
-        sql => sql.EnableRetryOnFailure()));
+builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddHealthChecks();
 
 var app = builder.Build();
 
@@ -23,6 +41,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseHttpsRedirection();
 

@@ -7,8 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\TravelPlanner.Domain\TravelPlanner.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="Abstractions\" />
-    <Folder Include="Models\" />
     <Folder Include="Validation\" />
   </ItemGroup>
 

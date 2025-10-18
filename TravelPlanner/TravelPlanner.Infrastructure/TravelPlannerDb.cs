@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using TravelPlanner.Domain.Entities;
 
 namespace TravelPlanner.Infrastructure
@@ -88,3 +88,4 @@ namespace TravelPlanner.Infrastructure
         }
     }
 }
+
