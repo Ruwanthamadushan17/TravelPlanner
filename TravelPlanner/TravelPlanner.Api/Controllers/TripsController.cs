@@ -1,3 +1,4 @@
+using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using TravelPlanner.Application.Abstractions;
 using TravelPlanner.Application.Models;
@@ -6,7 +7,8 @@ using TravelPlanner.Application.Validation;
 namespace TravelPlanner.Api.Controllers;
 
 [ApiController]
-[Route("api/v1/[controller]")]
+[ApiVersion("1.0")]
+[Route("api/v{version:apiVersion}/[controller]")]
 [Produces("application/json")]
 public class TripsController : ControllerBase
 {

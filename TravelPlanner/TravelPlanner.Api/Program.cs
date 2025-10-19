@@ -1,8 +1,10 @@
+using Asp.Versioning;
 using Azure.Identity;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System.Threading.RateLimiting;
+using TravelPlanner.Api.Configuration;
 using TravelPlanner.Api.Middleware;
 using TravelPlanner.Infrastructure;
 
@@ -28,11 +30,27 @@ else if (builder.Environment.IsProduction())
 }
 
 // Add services to the container.
-
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+
+// API Versioning
+builder.Services
+    .AddApiVersioning(o =>
+    {
+        o.DefaultApiVersion = new ApiVersion(1, 0);
+        o.AssumeDefaultVersionWhenUnspecified = true;
+        o.ReportApiVersions = true;
+    })
+    .AddApiExplorer(o =>
+    {
+        o.GroupNameFormat = "'v'VVV";
+        o.SubstituteApiVersionInUrl = true;
+    });
+
 builder.Services.AddSwaggerGen();
+builder.Services.ConfigureOptions<ConfigureSwaggerOptions>();
+builder.Services.ConfigureOptions<ConfigureSwaggerUIOptions>();
 
 builder.Services.AddInfrastructure(builder.Configuration);
 
@@ -56,12 +74,6 @@ builder.Services.AddRateLimiter(options =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
 app.UseRateLimiter();
@@ -71,6 +83,9 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers().RequireRateLimiting("fixed");
+
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.MapHealthChecks("/health/live", new HealthCheckOptions
 {
