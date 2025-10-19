@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Asp.Versioning.ApiExplorer;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -6,9 +7,9 @@ namespace TravelPlanner.Api.Configuration;
 
 public sealed class ConfigureSwaggerOptions : IConfigureOptions<SwaggerGenOptions>
 {
-    private readonly Asp.Versioning.ApiExplorer.IApiVersionDescriptionProvider _provider;
+    private readonly IApiVersionDescriptionProvider _provider;
 
-    public ConfigureSwaggerOptions(Asp.Versioning.ApiExplorer.IApiVersionDescriptionProvider provider)
+    public ConfigureSwaggerOptions(IApiVersionDescriptionProvider provider)
         => _provider = provider;
 
     public void Configure(SwaggerGenOptions options)

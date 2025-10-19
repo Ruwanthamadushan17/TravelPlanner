@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using System.Threading.RateLimiting;
 using TravelPlanner.Api.Configuration;
+using TravelPlanner.Application;
 using TravelPlanner.Api.Middleware;
 using TravelPlanner.Infrastructure;
 
@@ -51,6 +52,8 @@ builder.Services
 builder.Services.AddSwaggerGen();
 builder.Services.ConfigureOptions<ConfigureSwaggerOptions>();
 builder.Services.ConfigureOptions<ConfigureSwaggerUIOptions>();
+
+builder.Services.AddApplication();
 
 builder.Services.AddInfrastructure(builder.Configuration);
 
