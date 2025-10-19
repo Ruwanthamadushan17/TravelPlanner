@@ -1,12 +1,15 @@
 using Asp.Versioning;
 using Azure.Identity;
+using FluentValidation;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 using System.Threading.RateLimiting;
 using TravelPlanner.Api.Configuration;
-using TravelPlanner.Application;
 using TravelPlanner.Api.Middleware;
+using TravelPlanner.Application;
+using TravelPlanner.Application.Validation;
 using TravelPlanner.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -34,6 +37,12 @@ else if (builder.Environment.IsProduction())
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddFluentValidationAutoValidation(options =>
+{
+    options.DisableBuiltInModelValidation = true;
+});
+builder.Services.AddValidatorsFromAssemblyContaining<CreateTripRequestValidator>(includeInternalTypes: true);
 
 // API Versioning
 builder.Services

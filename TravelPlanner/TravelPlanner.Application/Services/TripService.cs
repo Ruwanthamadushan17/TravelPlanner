@@ -1,6 +1,5 @@
 using TravelPlanner.Application.Abstractions;
 using TravelPlanner.Application.Models;
-using TravelPlanner.Application.Validation;
 
 namespace TravelPlanner.Application.Services;
 
@@ -29,8 +28,6 @@ public class TripService : ITripService
 
     public async Task<TripDto> CreateAsync(CreateTripRequest request, CancellationToken ct = default)
     {
-        CreateTripRequestValidator.ValidateAndThrow(request);
-
         var entity = request.ToEntity();
         await _trips.AddAsync(entity, ct);
         await _uow.SaveChangesAsync(ct);
@@ -38,4 +35,3 @@ public class TripService : ITripService
         return entity.ToDto();
     }
 }
-
