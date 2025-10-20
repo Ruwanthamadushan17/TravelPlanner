@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
 using TravelPlanner.Application.Services;
 
@@ -7,8 +8,8 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
+        services.AddAutoMapper(typeof(DependencyInjection).Assembly);
         services.AddScoped<ITripService, TripService>();
         return services;
     }
 }
-
