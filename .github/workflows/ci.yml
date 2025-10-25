@@ -1,0 +1,55 @@
+name: CI
+
+on:
+  push:
+    branches: [ ci-setup, master ]
+  pull_request:
+    branches: [ master ]
+
+permissions:
+  contents: read
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: TravelPlanner
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8.x
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Cache NuGet
+        uses: actions/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget-
+
+      - name: Restore
+        run: dotnet restore TravelPlanner.sln
+
+      - name: Build (Release)
+        run: dotnet build TravelPlanner.sln --no-restore -c Release
+
+      - name: Test (Release)
+        run: |
+          dotnet test TravelPlanner.sln \
+            --no-build -c Release \
+            --logger "trx;LogFileName=test_results.trx" \
+            --results-directory ./TestResults
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: |
+            TravelPlanner/TestResults
+          if-no-files-found: ignore

@@ -88,16 +88,11 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 app.UseMiddleware<ExceptionHandlingMiddleware>();
 
-app.UseRateLimiter();
-
 app.UseHttpsRedirection();
 
+app.UseRateLimiter();
+
 app.UseAuthorization();
-
-app.MapControllers().RequireRateLimiting("fixed");
-
-app.UseSwagger();
-app.UseSwaggerUI();
 
 app.MapHealthChecks("/health/live", new HealthCheckOptions
 {
@@ -108,5 +103,13 @@ app.MapHealthChecks("/health/ready", new HealthCheckOptions
 {
     Predicate = r => r.Tags.Contains("ready")
 });
+
+app.MapControllers().RequireRateLimiting("fixed");
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
 
 app.Run();
