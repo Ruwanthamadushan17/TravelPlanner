@@ -8,10 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="secrets.development.json" />
-  </ItemGroup>
-
-  <ItemGroup>
 	  <None Update="secrets.development.json"
         Condition="Exists('secrets.development.json')">
 		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
