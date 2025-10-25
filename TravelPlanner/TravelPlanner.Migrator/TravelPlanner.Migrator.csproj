@@ -12,9 +12,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="secrets.development.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+	  <None Update="secrets.development.json"
+        Condition="Exists('secrets.development.json')">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
   </ItemGroup>
 
   <ItemGroup>
