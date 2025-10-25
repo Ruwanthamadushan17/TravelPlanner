@@ -419,3 +419,6 @@ FodyWeavers.xsd
 
 # --- Dev secrets (any project) ---
 **/secrets.development.json
+
+/.actrc
+/.act/  
